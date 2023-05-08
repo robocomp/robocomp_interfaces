@@ -1,9 +1,10 @@
-import "CameraSimple.idsl";
+import "CameraRGBDSimple.idsl";
 
 module RoboCompCamera360RGB
 {
   interface Camera360RGB
   {
-    RoboCompCameraSimple::TImage getROI(int cx, int cy, int sx, int sy, int roidx, int roidy, int roiwidth, int roiheight);
+    RoboCompCameraRGBDSimple::TImage getROI(int cx, int cy, int sx, int sy, int roiwidth, int roiheight);
+
   };
 };
