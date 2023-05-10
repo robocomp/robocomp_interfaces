@@ -1,0 +1,22 @@
+module RoboCompLidar3D
+{
+  struct TPoint
+  {
+    float x;
+    float y;
+    float z;
+    int intensity;
+  };
+
+  sequence<TPoint> TLidarData;
+
+  /** \interface Lidar
+  *@brief interface Lidar functions
+  */
+  interface Lidar3D
+  {
+	/** @brief Get lidar data */
+	TLidarData getLidarData();
+  };
+
+};
