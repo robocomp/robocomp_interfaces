@@ -16,7 +16,7 @@ module RoboCompLidar3D
   interface Lidar3D
   {
 	/** @brief Get lidar data */
-	TLidarData getLidarData();
+	TLidarData getLidarData(int start, int len);
   };
 
 };

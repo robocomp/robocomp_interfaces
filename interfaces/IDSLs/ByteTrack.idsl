@@ -1,0 +1,28 @@
+import "CameraRGBDSimple.idsl";
+module RoboCompByteTrack
+{
+    sequence<float> Scores;
+  
+    
+    sequence<float> Box;
+    sequence<Box> Boxes;
+    sequence<int> Clases;
+    
+    struct Targets
+    {
+    	int trackid;
+    	float score;
+    	Box tlwh;
+    	int clase;
+    };
+    
+    sequence<Targets> OnlineTargets;
+	
+  interface ByteTrack
+  {
+    OnlineTargets getTargetswithdepth(Scores ps, Boxes pb, RoboCompCameraRGBDSimple::TDepth depth, Clases clases);
+    OnlineTargets getTargets(Scores ps, Boxes pb, Clases clases);
+    void setTargets(Scores ps, Boxes pb, Clases clases, string sender);
+    OnlineTargets allTargets();
+  };
+};
