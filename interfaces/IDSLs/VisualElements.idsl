@@ -1,0 +1,27 @@
+import "Person.idsl";
+module RoboCompVisualElements
+{
+    // objects
+    struct TObject
+	{
+		int id;
+		int type;
+		int left;
+		int top;
+		int right;
+		int bot;
+		float score;  // 0-1
+		float depth;  // distance to bbox center in mm
+		float x;      // roi center coordinates in camera CS
+		float y;
+		float z;
+		RoboCompPerson::TPerson person;
+	};
+	sequence<TObject> TObjects;
+
+	
+  interface VisualElements
+  {
+    void setVisualObjects(TObjects visualObjects, int publisher); // 0: YOLO, 1: Mask2Former
+  };
+};
