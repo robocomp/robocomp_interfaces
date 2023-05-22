@@ -1,6 +1,16 @@
 import "Person.idsl";
 module RoboCompVisualElements
 {
+    struct TRoi
+    {
+        int xcenter;
+		int ycenter;
+        int xsize;
+		int ysize;
+		int finalxsize;
+		int finalysize;
+	};
+
     // objects
     struct TObject
 	{
@@ -15,8 +25,7 @@ module RoboCompVisualElements
 		float x;      // roi center coordinates in camera CS
 		float y;
 		float z;
-		int origResX;
-		int origResY;
+		TRoi roi;     // all current roi parameters
 		RoboCompPerson::TPerson person;
 	};
 	sequence<TObject> TObjects;
