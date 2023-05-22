@@ -15,13 +15,14 @@ module RoboCompVisualElements
 		float x;      // roi center coordinates in camera CS
 		float y;
 		float z;
+		int origResX;
+		int origResY;
 		RoboCompPerson::TPerson person;
 	};
 	sequence<TObject> TObjects;
 
-	
   interface VisualElements
   {
-    void setVisualObjects(TObjects visualObjects, int publisher); // 0: YOLO, 1: Mask2Former
+    TObjects getVisualObjects();
   };
 };

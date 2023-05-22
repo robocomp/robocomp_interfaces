@@ -1,0 +1,22 @@
+module RoboCompMaskElements
+{
+  sequence<byte> ImgType;
+  struct TMask
+  {
+    bool compressed;  // opencv jpeg compression
+    int width;
+    int height;
+    ImgType image;
+    int origResX;
+	int origResY;
+  };
+  sequence<TMask> TMasks;
+  dictionary<string, int> TNames;
+  sequence<string> TMaskNames;
+
+  interface MaskElements
+  {
+    TMasks getMasks(TMaskNames masknames);
+    TNames getNamesofCategories();
+  };
+};
