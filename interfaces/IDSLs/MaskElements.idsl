@@ -1,5 +1,14 @@
 module RoboCompMaskElements
 {
+  struct TRoi
+    {
+        int xcenter;
+		int ycenter;
+        int xsize;
+		int ysize;
+		int finalxsize;
+		int finalysize;
+	};
   sequence<byte> ImgType;
   struct TMask
   {
@@ -7,8 +16,7 @@ module RoboCompMaskElements
     int width;
     int height;
     ImgType image;
-    int origResX;
-	int origResY;
+    TRoi roi;     // all current roi parameters
   };
   sequence<TMask> TMasks;
   dictionary<string, int> TNames;
