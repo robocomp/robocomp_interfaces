@@ -1,0 +1,7 @@
+module RoboCompSegmentatorTrackingPub
+{
+  interface SegmentatorTrackingPub
+  {
+     idempotent void setTrack(int track);
+  };
+};

@@ -1,4 +1,5 @@
 import "CameraRGBDSimple.idsl";
+import "VisualElements.idsl";
 module RoboCompByteTrack
 {
     sequence<float> Scores;
@@ -20,9 +21,9 @@ module RoboCompByteTrack
 	
   interface ByteTrack
   {
-    OnlineTargets getTargetswithdepth(Scores ps, Boxes pb, RoboCompCameraRGBDSimple::TDepth depth, Clases clases);
-    OnlineTargets getTargets(Scores ps, Boxes pb, Clases clases);
-    void setTargets(Scores ps, Boxes pb, Clases clases, string sender);
-    OnlineTargets allTargets();
+    RoboCompVisualElements::TObjects getTargetswithdepth(RoboCompVisualElements::TObjects objects, RoboCompCameraRGBDSimple::TDepth depth);
+    RoboCompVisualElements::TObjects getTargets(RoboCompVisualElements::TObjects objects);
+    void setTargets(RoboCompVisualElements::TObjects objects, string sender);
+    RoboCompVisualElements::TObjects allTargets();
   };
 };
