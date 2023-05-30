@@ -1,10 +1,35 @@
-import "CameraRGBDSimple.idsl";
-
 module RoboCompCamera360RGB
 {
+  sequence<byte> ImgType;
+  
+      struct TRoi
+    {
+        int xcenter;
+		int ycenter;
+        int xsize;
+		int ysize;
+		int finalxsize;
+		int finalysize;
+	};
+  
+  struct TImage
+  {
+	
+    bool compressed; // opencv jpeg compression
+    int cameraID;
+    int width;
+    int height;
+    int depth;
+    int focalx;
+    int focaly;
+    long alivetime;   // creation time in ms
+    float period;     // acquisition period in ms
+    ImgType image;
+    TRoi roi;
+  };
+
   interface Camera360RGB
   {
-    RoboCompCameraRGBDSimple::TImage getROI(int cx, int cy, int sx, int sy, int roiwidth, int roiheight);
-
+    TImage getROI(int cx, int cy, int sx, int sy, int roiwidth, int roiheight);
   };
 };

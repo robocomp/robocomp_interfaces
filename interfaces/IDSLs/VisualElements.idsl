@@ -32,6 +32,6 @@ module RoboCompVisualElements
 
   interface VisualElements
   {
-    TObjects getVisualObjects();
+    TObjects getVisualObjects(TObjects objects); // Insert filled "objects" sequence parameter for object tracking
   };
 };
