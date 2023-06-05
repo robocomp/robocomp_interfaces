@@ -1,7 +1,9 @@
+import "VisualElements.idsl";
+
 module RoboCompSegmentatorTrackingPub
 {
   interface SegmentatorTrackingPub
   {
-     idempotent void setTrack(int track);
+     idempotent void setTrack(RoboCompVisualElements::TObject target);
   };
 };
