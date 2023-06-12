@@ -1,4 +1,6 @@
 import "Person.idsl";
+import "Camera360RGB.idsl";
+
 module RoboCompVisualElements
 {
     struct TRoi
@@ -25,7 +27,7 @@ module RoboCompVisualElements
 		float x;      // roi center coordinates in camera CS
 		float y;
 		float z;
-		TRoi roi;     // all current roi parameters
+		RoboCompCamera360RGB::TImage image;     // all current roi parameters
 		RoboCompPerson::TPerson person;
 	};
 	sequence<TObject> TObjects;
