@@ -1,0 +1,20 @@
+module RoboCompGridPlanner
+{
+	struct TPoint
+	{
+		float x;
+	    	float y;
+	};
+	sequence <TPoint> Points;
+	struct TPlan
+	{
+		Points path;
+		long timestamp;
+		TPoint subtarget;
+		bool valid;
+	};
+  interface GridPlanner
+  {
+    void setPlan(TPlan plan);
+  };
+};
