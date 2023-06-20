@@ -21,11 +21,11 @@ module RoboCompGazebo2Robocomp
 		void createEntity(string sdf);
 		
 		// Random name creation
-		void createBoxEntity(Vector3 position, Quaternion orientation, float size);
-		void createCylinderEntity(Vector3 position, Quaternion orientation, float length, float radius);
-		void createSphereEntity(Vector3 position, Quaternion orientation, float radius);
-		void createCapsuleEntity(Vector3 position, Quaternion orientation, float length, float radius);
-		void createHumanEntity(Vector3 position, Quaternion orientation);
+		void createRandomBoxEntity(Vector3 position, Quaternion orientation, float size);
+		void createRandomCylinderEntity(Vector3 position, Quaternion orientation, float length, float radius);
+		void createRandomSphereEntity(Vector3 position, Quaternion orientation, float radius);
+		void createRandomCapsuleEntity(Vector3 position, Quaternion orientation, float length, float radius);
+		void createRandomHumanEntity(Vector3 position, Quaternion orientation);
 		
 		// Specific name creation
 		void createBoxEntity(string name, Vector3 position, Quaternion orientation, float size);
