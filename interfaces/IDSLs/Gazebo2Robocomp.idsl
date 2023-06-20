@@ -25,12 +25,14 @@ module RoboCompGazebo2Robocomp
 		void createCylinderEntity(Vector3 position, Quaternion orientation, float length, float radius);
 		void createSphereEntity(Vector3 position, Quaternion orientation, float radius);
 		void createCapsuleEntity(Vector3 position, Quaternion orientation, float length, float radius);
+		void createHumanEntity(Vector3 position, Quaternion orientation);
 		
 		// Specific name creation
 		void createBoxEntity(string name, Vector3 position, Quaternion orientation, float size);
 		void createCylinderEntity(string name, Vector3 position, Quaternion orientation, float length, float radius);
 		void createSphereEntity(string name, Vector3 position, Quaternion orientation, float radius);
 		void createCapsuleEntity(string name, Vector3 position, Quaternion orientation, float length, float radius);
+		void createHumanEntity(string name, Vector3 position, Quaternion orientation);
 		
 		// Remove by name
 		void removeEntity(string name);
