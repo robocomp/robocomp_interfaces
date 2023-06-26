@@ -7,16 +7,19 @@ module RoboCompLidar3D
     float z;
     int intensity;
   };
+  sequence<TPoint> TPoints;
 
-  sequence<TPoint> TLidarData;
+  struct TData
+  {
+    TPoints points;
+    float period;
+    long timestamp;
+  };
 
-  /** \interface Lidar
-  *@brief interface Lidar functions
-  */
   interface Lidar3D
   {
 	/** @brief Get lidar data */
-	TLidarData getLidarData(string name, int start, int len, int decimationfactor);
+	TData getLidarData(string name, int start, int len, int decimationfactor);
   };
 
 };
