@@ -18,6 +18,8 @@ module RoboCompFullPoseEstimation
 	    float rx; float ry; float rz;
 	    float vx; float vy; float vz;       // speed in world frame
 	    float vrx; float vry; float vrz;
+	    float ax; float ay; float az;    // Aceleration in world frame
+	    float arx; float ary; float arz;
 	    float adv; float side; float rot;   // speed in local robot frame
 	    int confidence;
     };

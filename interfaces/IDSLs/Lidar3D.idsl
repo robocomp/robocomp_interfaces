@@ -6,6 +6,10 @@ module RoboCompLidar3D
     float y;
     float z;
     int intensity;
+    float phi;
+    float theta;
+    float r;
+    float distance2d;
   };
   sequence<TPoint> TPoints;
 
@@ -19,7 +23,8 @@ module RoboCompLidar3D
   interface Lidar3D
   {
 	/** @brief Get lidar data */
-	TData getLidarData(string name, int start, int len, int decimationfactor);
+	TData getLidarData(string name, float start, float len, int decimationDegreeFactor);
+	TData getLidarDataWithThreshold2d(string name, float distance);
   };
 
 };
