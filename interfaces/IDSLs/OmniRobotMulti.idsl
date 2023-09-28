@@ -1,0 +1,13 @@
+import "GenericBase.idsl";
+
+module RoboCompOmniRobot
+{
+  interface OmniRobot
+  {
+    void getBasePose(int robotId, out int x, out int z, out float alpha) throws RoboCompGenericBase::HardwareFailedException;
+    void setSpeedBase(int robotId, float advx, float advz, float rot) throws RoboCompGenericBase::HardwareFailedException;
+    void stopBase(int robotId) throws RoboCompGenericBase::HardwareFailedException;
+  };
+};
+
+
