@@ -2,7 +2,7 @@ import "GenericBase.idsl";
 
 module RoboCompOmniRobot
 {
-  interface OmniRobot
+  interface OmniRobotMulti
   {
     void getBasePose(int robotId, out int x, out int z, out float alpha) throws RoboCompGenericBase::HardwareFailedException;
     void setSpeedBase(int robotId, float advx, float advz, float rot) throws RoboCompGenericBase::HardwareFailedException;
