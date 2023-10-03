@@ -10,6 +10,9 @@ module RoboCompLidar3D
     float theta;
     float r;
     float distance2d;
+    /*Lidar values proyected to image in XY*/
+    int pixelX;
+    int pixelY;
   };
   sequence<TPoint> TPoints;
 
@@ -25,6 +28,6 @@ module RoboCompLidar3D
 	/** @brief Get lidar data */
 	TData getLidarData(string name, float start, float len, int decimationDegreeFactor);
 	TData getLidarDataWithThreshold2d(string name, float distance);
+	TData getLidarDataProyectedInImage(string name);
   };
-
 };
