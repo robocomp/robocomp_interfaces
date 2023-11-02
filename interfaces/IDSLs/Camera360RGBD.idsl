@@ -1,0 +1,38 @@
+module RoboCompCamera360RGBD
+{
+  sequence<byte> ImgType;
+  
+      struct TRoi
+    {
+        int xcenter;
+	int ycenter;
+        int xsize;
+	int ysize;
+	int finalxsize;
+	int finalysize;
+	};
+  
+  struct TRGBD
+  {
+	
+    bool rgbcompressed; // opencv jpeg compression
+    bool depthcompressed; // opencv jpeg compression
+    int cameraID;
+    int width;
+    int height;
+    int rgbchannels;
+    int depthchannels;
+    int focalx;
+    int focaly;
+    long alivetime;   // creation time in ms
+    float period;     // acquisition period in ms
+    ImgType rgb;
+    ImgType depth;
+    TRoi roi;
+  };
+
+  interface Camera360RGBD
+  {
+    TRGBD getROI(int cx, int cy, int sx, int sy, int roiwidth, int roiheight);
+  };
+};
