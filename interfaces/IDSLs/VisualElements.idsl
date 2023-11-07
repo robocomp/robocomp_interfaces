@@ -12,8 +12,9 @@ module RoboCompVisualElements
 		int finalxsize;
 		int finalysize;
 	};
-
+    sequence<float> TMetrics;
     // objects
+    
     struct TObject
 	{
 		int id;
@@ -27,6 +28,7 @@ module RoboCompVisualElements
 		float x;      // roi center coordinates in camera CS
 		float y;
 		float z;
+		TMetrics metrics;
 		RoboCompCamera360RGB::TImage image;     // all current roi parameters
 		RoboCompPerson::TPerson person;
 	};
