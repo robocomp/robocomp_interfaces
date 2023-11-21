@@ -28,11 +28,24 @@ module RoboCompVisualElements
 		float x;      // roi center coordinates in camera CS
 		float y;
 		float z;
+		float vx;
+		float vy;
+		float vz;
+		float vrx;
+		float vry;
+		float vrz;
 		TMetrics metrics;
 		RoboCompCamera360RGB::TImage image;     // all current roi parameters
 		RoboCompPerson::TPerson person;
 	};
-	sequence<TObject> TObjects;
+	sequence<TObject> TObjectList;
+	struct TObjects
+	{
+		TObjectList objects;
+		long timestampimage;
+		long timestampgenerated;
+		float period;
+	}
 
   interface VisualElements
   {
