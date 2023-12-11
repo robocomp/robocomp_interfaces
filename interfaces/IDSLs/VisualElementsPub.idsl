@@ -1,0 +1,23 @@
+module RoboCompVisualElementsPub
+{
+    dictionary<string, string> TAttributes;
+    struct TObject
+    {
+        int id;
+        int type;
+        TAttributes attributes;
+    };
+	sequence<TObject> TObjects;
+	struct TData
+	{
+		TObjects objects;
+		long timestampimage;
+		long timestampgenerated;
+		float period;
+	};
+
+  interface VisualElementsPub
+  {
+    void setVisualObjects(TData data);
+  };
+};
