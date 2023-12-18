@@ -40,7 +40,7 @@ module RoboCompLidar3D
   {
 	/** @brief Get lidar data */
 	TData getLidarData(string name, float start, float len, int decimationDegreeFactor);
-	TData getLidarDataWithThreshold2d(string name, float distance);
+	TData getLidarDataWithThreshold2d(string name, float distance, int decimationDegreeFactor);
 	TData getLidarDataProyectedInImage(string name);
 	TDataImage getLidarDataArrayProyectedInImage(string name);
   };
