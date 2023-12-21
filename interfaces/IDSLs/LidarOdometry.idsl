@@ -1,0 +1,11 @@
+import "FullPoseEstimation.idsl";
+
+module RoboCompLidarOdometry
+{
+    interface LidarOdometry
+    {
+        RoboCompFullPoseEstimation::FullPoseEuler getFullPoseEuler();
+        RoboCompFullPoseEstimation::FullPoseMatrix getFullPoseMatrix();
+        void reset();
+    };
+};
