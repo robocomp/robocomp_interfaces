@@ -3,12 +3,20 @@ module RoboCompGridPlanner
 	struct TPoint
 	{
 		float x;
-	    	float y;
+	    float y;
 	};
+	struct TControl
+    {
+        float adv;  // advance speed for this segment of the path
+        float side;
+        float rot;
+    };
 	sequence <TPoint> Points;
+	sequence <TControl> Control;
 	struct TPlan
 	{
 		Points path;
+		Control controls;
 		long timestamp;
 		TPoint subtarget;
 		bool valid;
@@ -16,5 +24,6 @@ module RoboCompGridPlanner
   interface GridPlanner
   {
     void setPlan(TPlan plan);
+    TPlan modifyPlan(TPlan plan);
   };
 };
