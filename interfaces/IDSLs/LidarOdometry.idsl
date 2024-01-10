@@ -2,10 +2,17 @@ import "FullPoseEstimation.idsl";
 
 module RoboCompLidarOdometry
 {
+    struct PoseAndChange
+    {
+        RoboCompFullPoseEstimation::FullPoseMatrix pose;
+        RoboCompFullPoseEstimation::FullPoseMatrix change;
+    };
+
     interface LidarOdometry
     {
         RoboCompFullPoseEstimation::FullPoseEuler getFullPoseEuler();
         RoboCompFullPoseEstimation::FullPoseMatrix getFullPoseMatrix();
         void reset();
+        PoseAndChange getPoseAndChange();
     };
 };
