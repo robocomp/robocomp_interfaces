@@ -1,3 +1,5 @@
+import "Camera360RGB.idsl";
+
 module RoboCompVisualElementsPub
 {
     dictionary<string, string> TAttributes;
@@ -5,6 +7,7 @@ module RoboCompVisualElementsPub
     {
         int id;
         int type;
+        RoboCompCamera360RGB::TImage image;
         TAttributes attributes;
     };
 	sequence<TObject> TObjects;
