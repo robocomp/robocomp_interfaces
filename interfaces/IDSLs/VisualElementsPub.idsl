@@ -13,6 +13,7 @@ module RoboCompVisualElementsPub
 	sequence<TObject> TObjects;
 	struct TData
 	{
+		string publisher;
 		TObjects objects;
 		long timestampimage;
 		long timestampgenerated;
