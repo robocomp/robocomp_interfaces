@@ -20,6 +20,7 @@ module RoboCompGridder
 		TPaths paths;
 		long timestamp;
 		string error_msg;
+		bool valid;
 	};
 
   interface Gridder
