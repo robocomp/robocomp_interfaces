@@ -27,6 +27,7 @@ module RoboCompGridder
   {
 	Result getPaths(TPoint source, TPoint target, int max_paths, bool try_closest_free_point, bool target_is_human);
 	TPoint getClosestFreePoint(TPoint source);
+	bool setGridDimensions(TDimensions dimensions);
 	bool LineOfSightToTarget(TPoint source, TPoint target, float robot_radius);
 	bool IsPathBlocked(TPath path);
 	TDimensions getDimensions();
