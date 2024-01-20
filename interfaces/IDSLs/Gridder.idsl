@@ -4,6 +4,7 @@ module RoboCompGridder
 	{
 		float x;
         float y;
+        float radius;    // radius of the object's bounding box
 	};
 
 	sequence <TPoint> TPath;
