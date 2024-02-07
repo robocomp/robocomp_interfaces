@@ -20,16 +20,16 @@ module RoboCompGridder
 	{
 		TPaths paths;
 		long timestamp;
-		string error_msg;
+		string errorMsg;
 		bool valid;
 	};
 
   interface Gridder
   {
-	Result getPaths(TPoint source, TPoint target, int max_paths, bool try_closest_free_point, bool target_is_human);
+	Result getPaths(TPoint source, TPoint target, int maxPaths, bool tryClosestFreePoint, bool targetIsHuman);
 	TPoint getClosestFreePoint(TPoint source);
 	bool setGridDimensions(TDimensions dimensions);
-	bool LineOfSightToTarget(TPoint source, TPoint target, float robot_radius);
+	bool LineOfSightToTarget(TPoint source, TPoint target, float robotRadius);
 	bool IsPathBlocked(TPath path);
 	TDimensions getDimensions();
   };

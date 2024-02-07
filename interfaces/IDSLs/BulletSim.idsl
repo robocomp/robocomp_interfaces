@@ -1,0 +1,28 @@
+import "Gridder.idsl";
+
+module RoboCompBulletSim
+{
+
+struct TPoint
+	{
+		float x;
+        	float y;
+        	float z;
+	};
+		
+  struct Result
+  {
+    bool collision;
+    float collisionTime;
+    TPoint collisionPose;    
+  };
+
+  interface BulletSim
+  {
+  
+    Result simulatePath(RoboCompGridder::TPath path, float speed, RoboCompGridder::TPoint obstacle);
+    
+  };
+};
+
+
