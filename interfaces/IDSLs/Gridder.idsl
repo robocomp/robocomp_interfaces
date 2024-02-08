@@ -31,6 +31,7 @@ module RoboCompGridder
 	bool setGridDimensions(TDimensions dimensions);
 	bool LineOfSightToTarget(TPoint source, TPoint target, float robotRadius);
 	bool IsPathBlocked(TPath path);
+	Result setLocationAndGetPath(TPoint source, TPoint target, bool setFree, TPoint obstacle);
 	TDimensions getDimensions();
   };
 };
