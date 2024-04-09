@@ -1,0 +1,5 @@
+module RoboCompWhisperStream{
+	interface WhisperStream{
+		void OnMessageTranscribed(string message);
+	};
+};
