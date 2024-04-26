@@ -1,0 +1,7 @@
+module RoboCompG2Ooptimizer
+{
+    interface G2Ooptimizer
+    {
+        string optimize(string trajectory);
+    };
+};

@@ -22,6 +22,7 @@ module RoboCompWebots2Robocomp
         interface Webots2Robocomp
         {
 		void setPathToHuman(int humanId, RoboCompGridder::TPath path);
+		void resetWebots();
         };
 };
 
