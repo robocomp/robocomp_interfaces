@@ -1,0 +1,20 @@
+module RoboCompContactile
+{
+	struct FingerTip
+	{
+		float x;	
+		float y;
+		float z;
+	};
+	
+	struct FingerTips
+	{
+		FingerTip left;
+		FingerTip right;
+	};
+
+	interface Contactile
+	{
+		FingerTips getValues();
+	};
+};
