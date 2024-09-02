@@ -1,0 +1,10 @@
+module RoboCompEmergencyStopPub
+{
+	interface EmergencyStopPub
+	{
+		void emergencyStop(bool stop);
+	};
+
+};
+
+

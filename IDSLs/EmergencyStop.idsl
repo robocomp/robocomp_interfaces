@@ -1,0 +1,10 @@
+module RoboCompEmergencyStop
+{
+	interface EmergencyStop
+	{
+		bool isEmergency();
+	};
+
+};
+
+

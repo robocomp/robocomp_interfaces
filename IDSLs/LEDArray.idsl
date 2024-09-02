@@ -1,0 +1,18 @@
+module RoboCompLEDArray
+{
+  struct Pixel
+  {
+    byte red;
+    byte green;
+    byte blue;
+    byte white;
+  };
+
+  dictionary<short, Pixel> PixelArray; // Index pixel and value
+
+  interface LEDArray
+  {
+    PixelArray getLEDArray() ;
+    byte setLEDArray(PixelArray pixelArray);
+  };
+};

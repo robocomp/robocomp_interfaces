@@ -1,0 +1,26 @@
+module RoboCompRGBSensor
+{
+  struct RGBPixel
+  {
+    byte red;
+    byte green;
+    byte blue;
+  };
+
+  struct RGBPixelRAW
+  {
+    byte red;
+    byte green;
+    byte blue;
+    byte clearLight;
+  };
+
+  interface RGBSensor
+  {
+    RGBPixel getRGBPixel();
+    RGBPixelRAW getRGBPixelRAW();
+    float getTemperature();
+    float getLux();
+    void setLight(byte percentageLight);
+  };
+};
