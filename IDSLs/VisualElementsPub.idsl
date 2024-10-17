@@ -1,4 +1,5 @@
 import "Camera360RGB.idsl";
+import "Lidar3D.idsl";
 
 module RoboCompVisualElementsPub
 {
@@ -9,6 +10,7 @@ module RoboCompVisualElementsPub
         int type;
         RoboCompCamera360RGB::TImage image;
         TAttributes attributes;
+        RoboCompLidar3D::TDataImage maskpoints;
     };
 	sequence<TObject> TObjects;
 	struct TData
