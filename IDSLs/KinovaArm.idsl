@@ -26,14 +26,46 @@ module RoboCompKinovaArm
 	    float rtipforce;
 	    float distance;
 	};
+	
+	struct TJoint
+	{
+		float angle;
+		float velocity;
+		float force;
+	};
+	
+	sequence <TJoint> TJointSeq;
+	
+	struct TJoints
+	{
+		TJointSeq joints;
+		long timestamp;
+	};
+
+	sequence <float> Speeds;
+	
+	struct TJointSpeeds
+	{
+		Speeds jointSpeeds;
+	};
+	
+	sequence <float> Angles;
+	
+	struct TJointAngles
+	{
+		Angles jointAngles;
+	};
 
 	interface KinovaArm
 	{
-		TPose getCenterOfTool(ArmJoints referencedTo);
-		void setCenterOfTool(TPose pose, ArmJoints referencedTo);
-		TGripper getGripperState();
-		void openGripper();
-		void closeGripper();
+		bool closeGripper ();
+		TPose getCenterOfTool (ArmJoints referencedTo);
+		TGripper getGripperState ();
+		TJoints getJointsState ();
+		void openGripper ();
+		void setCenterOfTool (TPose pose, ArmJoints referencedTo);
+		void moveJointsWithSpeed(TJointSpeeds speeds);
+		void moveJointsWithAngle(TJointAngles angles);
 	};
 };
 

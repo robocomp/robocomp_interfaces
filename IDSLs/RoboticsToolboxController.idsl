@@ -1,0 +1,17 @@
+module RoboCompRoboticsToolboxController
+{ 
+  sequence<float> JointAngles;
+  sequence<float> TargetPosition;
+  sequence<float> JointVelocities;
+  
+  struct JointStates
+  {
+  	JointVelocities jointVelocities;
+  	bool arrived;
+  };
+  
+  interface RoboticsToolboxController
+  {
+	JointStates calculateVelocities(JointAngles angles, TargetPosition targetPosition);
+  };
+};
