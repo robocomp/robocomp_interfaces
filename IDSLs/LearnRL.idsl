@@ -1,0 +1,19 @@
+module RoboCompLearnRL
+{
+
+    sequence<float> ResidualAction;  // list of returned actions
+
+    struct TState
+    {
+        float distance;
+        float angle;
+        float rot;
+        float advance;
+    };
+
+    interface LearnRL
+    {
+        ResidualAction learn(TState state, float reward, bool done);
+        ResidualAction predict(TState state);
+    };
+};
