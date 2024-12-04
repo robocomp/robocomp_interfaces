@@ -12,6 +12,9 @@ module RoboCompRoboticsToolboxController
   
   interface RoboticsToolboxController
   {
-	JointStates calculateVelocities(JointAngles angles, TargetPosition targetPosition);
+	JointStates calculateVelocitiesPedro(JointAngles angles, TargetPosition targetPosition);
+	JointStates calculateVelocitiesPablo(JointAngles angles, TargetPosition targetPosition);
+	void setStatePedro(JointAngles angles);
+	void setStatePablo(JointAngles angles);
   };
 };

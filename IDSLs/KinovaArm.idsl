@@ -29,9 +29,14 @@ module RoboCompKinovaArm
 	
 	struct TJoint
 	{
+		int id;
 		float angle;
 		float velocity;
-		float force;
+		float torque;
+		float current;
+		float voltage;
+		float motor_temperature;
+		float core_temperature;
 	};
 	
 	sequence <TJoint> TJointSeq;
