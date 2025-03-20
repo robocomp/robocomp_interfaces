@@ -9,6 +9,7 @@ module RoboCompFullPoseEstimation
 	    float m10;  float m11;  float m12; float m13;
 	    float m20;  float m21;  float m22; float m23;
 	    float m30;  float m31;  float m32; float m33;
+    	long timestamp;
     };
 
     struct FullPoseEuler
@@ -22,6 +23,7 @@ module RoboCompFullPoseEstimation
 	    float arx; float ary; float arz;
 	    float adv; float side; float rot;   // speed in local robot frame
 	    int confidence;
+    	long timestamp;
     };
 
     interface FullPoseEstimation
