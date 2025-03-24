@@ -1,0 +1,20 @@
+module RoboCompContactilePub
+{
+	struct FingerTip
+	{
+		float x;	
+		float y;
+		float z;
+	};
+	
+	struct FingerTips
+	{
+		FingerTip left;
+		FingerTip right;
+	};
+
+	interface ContactilePub
+	{
+		void setValues(FingerTips data);
+	};
+};
