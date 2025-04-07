@@ -1,0 +1,9 @@
+import "Lidar3D.idsl";
+
+module RoboCompLidar3DPub
+{
+  interface Lidar3DPub
+  {
+  	idempotent void pushLidarData(RoboCompLidar3D::TDataCategory lidarData);
+  };
+};
