@@ -22,7 +22,7 @@ module RoboCompCamera360RGB
     int depth;
     int focalx;
     int focaly;
-    long alivetime;   // creation time in ms
+    long timestamp;   // creation time in ms
     float period;     // acquisition period in ms
     ImgType image;
     TRoi roi;
