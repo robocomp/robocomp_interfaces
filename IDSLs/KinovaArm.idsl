@@ -26,11 +26,11 @@ module RoboCompKinovaArm
 	struct TToolInfo
 	{
 		TAxis pose;
-		TAxis pose_theta;
-		TAxis twist_linear;
-		TAxis twist_angular;
-		TAxis external_wrench_force;
-		TAxis external_wrench_torque;
+		TAxis poseTheta;
+		TAxis twistLinear;
+		TAxis twistAngular;
+		TAxis externalWrenchTorce;
+		TAxis externalWrenchTorque;
 	};
 
 	struct TGripper
