@@ -1,6 +1,6 @@
 module RoboCompRobotStatusPub
 {
-  #########################Power############################
+  ////////////////////////////Power///////////////////////
   struct PowerData
   {
     float voltage;
@@ -8,10 +8,10 @@ module RoboCompRobotStatusPub
   };
   dictionary<string, PowerData> PowersMap;
 
-  ######################Temperatures##############################
+  ////////////////////////Temperatures//////////////////////
   dictionary<string, float> ThermalMap;
 
-  
+
 
   interface RobotStatusPub
   {
