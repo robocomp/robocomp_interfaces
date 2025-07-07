@@ -1,0 +1,9 @@
+module RoboCompTemperaturePub
+{
+  dictionary<string, float> mapTemperature;
+
+  interface TemperaturePub
+  {
+    void temperatureState(mapTemperature temperature)
+  };
+};

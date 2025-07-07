@@ -1,0 +1,15 @@
+module RoboCompPowerPub
+{
+  struct Power
+  {
+    float voltage;
+    float current;
+  };
+  
+  dictionary<string, Power> mapPowers;
+
+  interface PowerPub
+  {
+    void powerState(Powers power)
+  };
+};
