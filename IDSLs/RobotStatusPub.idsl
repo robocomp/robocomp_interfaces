@@ -1,0 +1,22 @@
+module RoboCompRobotStatusPub
+{
+  #########################Power############################
+  struct PowerData
+  {
+    float voltage;
+    float current;
+  };
+  dictionary<string, PowerData> PowersMap;
+
+  ######################Temperatures##############################
+  dictionary<string, float> ThermalMap;
+
+  
+
+  interface RobotStatusPub
+  {
+    void powerState( PowersMap powers);
+    void thermalState(ThermalMap temperatures);
+
+  };
+};
