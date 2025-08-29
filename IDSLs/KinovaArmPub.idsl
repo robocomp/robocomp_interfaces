@@ -1,23 +1,11 @@
+import "KinovaArm.idsl";
+
 module RoboCompKinovaArmPub
 {
-	struct TArmState
-	{
-		float x;
-		float y;
-		float z;
-		float rx;
-		float ry;
-		float rz;
-		float qta;
-		float qtb;
-		float qtc;
-		float qtd;
-	};
-
 	interface KinovaArmPub
 	{
-		void newArmState(TArmState armstate);
+		void newArmState(RoboCompKinovaArm::TPose armState);
+		void sendJointsWithAngle(RoboCompKinovaArm::TJointAngles angles);
+
 	};
 };
-
-

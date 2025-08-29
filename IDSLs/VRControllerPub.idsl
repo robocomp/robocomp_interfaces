@@ -1,0 +1,31 @@
+module RoboCompVRControllerPub
+{
+  struct Pose
+  {
+    float x;
+    float y;
+    float z;
+    float rx;
+    float ry;
+    float rz;
+  };
+
+  struct Controller
+  {
+    float trigger;
+    float grab;
+    float x;
+    float y;
+    float thumbstickCapTouch;
+    bool aButton;
+    float aButtonCapTouch;
+    bool bButton;
+    float bButtonCapTouch;
+  };
+
+  interface VRControllerPub
+  {
+    void sendPose(Pose head, Pose left, Pose right);
+    void sendControllers(Controller left, Controller right);
+  };
+};
