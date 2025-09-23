@@ -5,6 +5,7 @@ module RoboCompIMU
 		float XAcc;
 		float YAcc;
 		float ZAcc;
+		long timestamp;
 	};
 	
 	struct Gyroscope
@@ -12,6 +13,7 @@ module RoboCompIMU
 		float XGyr;
 		float YGyr;
 		float ZGyr;
+		long timestamp;
 	};
 	
 	struct Magnetic
@@ -19,6 +21,7 @@ module RoboCompIMU
 		float XMag;
 		float YMag;
 		float ZMag;
+		long timestamp;
 	};
 	
 	struct Orientation
@@ -26,6 +29,7 @@ module RoboCompIMU
 		float Roll;
 		float Pitch;
 		float Yaw;
+		long timestamp;
 	};
 	
 	struct DataImu {
