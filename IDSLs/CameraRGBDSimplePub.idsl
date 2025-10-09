@@ -4,6 +4,6 @@ module RoboCompCameraRGBDSimplePub
 {
   interface CameraRGBDSimplePub
   {
-    idempotent void pushRGBD(RoboCompCameraRGBDSimple::TImage im, RoboCompCameraRGBDSimple::TDepth dep);
+    idempotent void pushRGBD(RoboCompCameraRGBDSimple::TRGBD rgbd);
   };
 };
