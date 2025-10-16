@@ -8,6 +8,10 @@ module RoboCompVRControllerPub
     float rx;
     float ry;
     float rz;
+    float qrx;
+    float qry;
+    float qrz;
+    float qrw;
   };
 
   struct Controller
@@ -23,9 +27,16 @@ module RoboCompVRControllerPub
     float bButtonCapTouch;
   };
 
+  struct Haptic
+  {
+    float intensity;
+    float frequency;
+  };
+
   interface VRControllerPub
   {
-    void sendPose(Pose head, Pose left, Pose right);
+    void sendPoses(Pose head, Pose left, Pose right);
     void sendControllers(Controller left, Controller right);
+    void sendHaptics(Haptic left, Haptic right);
   };
 };
