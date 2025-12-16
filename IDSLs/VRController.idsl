@@ -1,0 +1,44 @@
+module RoboCompVRController
+{
+  struct Pose
+  {
+    float x;
+    float y;
+    float z;
+    float qrx;
+    float qry;
+    float qrz;
+    float qrw;
+  };
+
+  struct Controller
+  {
+    Pose pose;
+    float trigger;
+    float grab;
+    float x;
+    float y;
+    float thumbstickCapTouch;
+    bool aButton;
+    float aButtonCapTouch;
+    bool bButton;
+    float bButtonCapTouch;
+  };
+
+  struct Haptic
+  {
+    float intensity;
+    float frequency;
+  };
+
+  struct Haptics
+  {
+    Haptic left;
+    Haptic right;
+  };
+
+  interface VRController
+  {
+    Haptics sendDataReceiveHaptics(Pose head, Controller left, Controller right);
+  };
+};
