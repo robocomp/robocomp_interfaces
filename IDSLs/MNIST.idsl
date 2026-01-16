@@ -1,0 +1,16 @@
+// MNIST interface to provide the output of a DNN MNIST classifier
+
+module RoboCompMNIST
+{
+
+  struct Res
+  {
+    int number;
+    int centerx;
+  };	
+
+  interface MNIST
+  {
+	Res getNumber();
+  };
+};
