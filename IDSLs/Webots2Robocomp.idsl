@@ -21,7 +21,7 @@ module RoboCompWebots2Robocomp
         struct ObjectPose{
                 Vector3 position;
                 Quaternion orientation;
-        }
+        };
 
         interface Webots2Robocomp
         {
