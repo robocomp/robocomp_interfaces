@@ -2,8 +2,7 @@ import "Gridder.idsl";
 
 module RoboCompWebots2Robocomp
 {
-
-
+        
         struct Vector3
         {
                 float x;
@@ -19,10 +18,16 @@ module RoboCompWebots2Robocomp
                 float w;
         };
 
+        struct ObjectPose{
+                Vector3 position;
+                Quaternion orientation;
+        };
+
         interface Webots2Robocomp
         {
 		void setPathToHuman(int humanId, RoboCompGridder::TPath path);
 		void setDoorAngle(float angle);
+                ObjectPose getObjectPose(string DEF);
 		void resetWebots();
         };
 };
