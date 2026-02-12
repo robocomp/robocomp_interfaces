@@ -1,39 +1,156 @@
+/*
+ * Gridder Interface
+ * =================
+ *
+ * ICE interface for the Gridder component, providing 2D occupancy grid
+ * services and path planning capabilities.
+ *
+ * Main Services:
+ *   - Path planning between two points with configurable safety
+ *   - Line-of-sight checking for direct paths
+ *   - Map serialization for network transmission
+ *   - Grid dimension management
+ *
+ * Data Structures:
+ *   - TPoint: 2D point with optional radius (for obstacle/robot representation)
+ *   - TPath/TPaths: Sequences of points representing paths
+ *   - TCell/Map: Compact map representation for efficient transmission
+ *   - Result: Path computation result with status and multiple path options
+ *
+ * Usage Example (C++):
+ *   auto result = gridder_proxy->getPaths(source, target, 3, true, false, 0.5f);
+ *   if (!result.paths.empty()) {
+ *       auto path = result.paths[0];  // Best path
+ *   }
+ *
+ * Author: RoboLab - University of Extremadura
+ * Date: 2024-2025
+ */
+
 module RoboCompGridder
 {
+	// 2D point with optional bounding radius
 	struct TPoint
 	{
-		float x;
-        float y;
-        float radius;    // radius of the object's bounding box
+		float x;        // mm - x coordinate
+        float y;        // mm - y coordinate
+        float radius;   // mm - radius of the object's bounding box (optional)
 	};
 	
 	sequence <TPoint> TPointVector;
-	sequence <TPoint> TPath;
-	sequence <TPath> TPaths;
+	sequence <TPoint> TPath;         // Single path: sequence of waypoints
+	sequence <TPath> TPaths;         // Multiple alternative paths
+
+	// Grid dimensions in world coordinates
 	struct TDimensions
 	{
-        float left;
-        float top;
-	    float width;
-        float height;
-	};
-	struct Result
-	{
-		TPaths paths;
-		long timestamp;
-		string errorMsg;
-		bool valid;
+        float left;     // mm - left boundary
+        float top;      // mm - top boundary
+	    float width;    // mm - grid width
+        float height;   // mm - grid height
 	};
 
-  interface Gridder
-  {
-	Result getPaths(TPoint source, TPoint target, int maxPaths, bool tryClosestFreePoint, bool targetIsHuman);
-	TPoint getClosestFreePoint(TPoint source);
-	bool setGridDimensions(TDimensions dimensions);
-	bool LineOfSightToTarget(TPoint source, TPoint target, float robotRadius);
-	bool IsPathBlocked(TPath path);
-	Result setLocationAndGetPath(TPoint source, TPoint target, TPointVector freePoints, TPointVector obstaclePoints);
-	TDimensions getDimensions();
-  };
+	// Path computation result
+	struct Result
+	{
+		TPaths paths;       // Computed paths (may be empty if no path found)
+		long timestamp;     // Computation timestamp (ms since epoch)
+		string errorMsg;    // Error/status message
+		bool valid;         // True if computation succeeded
+	};
+
+    // Compact cell representation for map transmission
+    // Only cells with cost > 0 are transmitted (sparse representation)
+    struct TCell
+    {
+        int x;          // mm - cell x position (center)
+        int y;          // mm - cell y position (center)
+        byte cost;      // 0=free, 255=obstacle, 100-200=inflation layers
+    };
+
+    sequence <TCell> TCellVector;
+
+    // Serialized map for network transmission
+    // Contains only non-free cells for efficiency
+    struct Map
+    {
+        int tileSize;           // mm - size of each cell (typically 100mm)
+        TCellVector cells;      // Cells with cost > 0
+    };
+
+    /**
+     * Gridder Interface
+     *
+     * Provides path planning and occupancy grid services.
+     */
+    interface Gridder
+    {
+        /**
+         * Compute paths from source to target.
+         * @param source Starting point
+         * @param target Destination point
+         * @param maxPaths Maximum number of alternative paths to compute
+         * @param tryClosestFreePoint If true, find closest free point if target is blocked
+         * @param targetIsHuman If true, apply human-aware path planning
+         * @param safetyFactor 0.0=shortest path, 1.0=safest path (prefer center of free space)
+         * @return Result with computed paths and status
+         */
+        Result getPaths(TPoint source, TPoint target, int maxPaths,
+                        bool tryClosestFreePoint, bool targetIsHuman, float safetyFactor);
+
+        /**
+         * Find the closest free cell to a given point.
+         * @param source Point to search from
+         * @return Closest free point, or (0,0) if none found
+         */
+        TPoint getClosestFreePoint(TPoint source);
+
+        /**
+         * Set grid dimensions (clears existing grid).
+         * @param dimensions New grid boundaries
+         * @return True if successful
+         */
+        bool setGridDimensions(TDimensions dimensions);
+
+        /**
+         * Check if there is a clear line of sight between two points.
+         * @param source Starting point
+         * @param target Destination point
+         * @param robotRadius Robot radius for collision checking
+         * @return True if line of sight is free
+         */
+        bool LineOfSightToTarget(TPoint source, TPoint target, float robotRadius);
+
+        /**
+         * Check if a path is blocked by obstacles.
+         * @param path Path to check
+         * @return True if path is blocked
+         */
+        bool IsPathBlocked(TPath path);
+
+        /**
+         * Update grid with obstacle/free points and compute path.
+         * @param source Starting point
+         * @param target Destination point
+         * @param freePoints Points known to be free
+         * @param obstaclePoints Points known to be obstacles
+         * @return Result with computed path
+         */
+        Result setLocationAndGetPath(TPoint source, TPoint target,
+                                     TPointVector freePoints, TPointVector obstaclePoints);
+
+        /**
+         * Get current grid dimensions.
+         * @return Grid boundaries
+         */
+        TDimensions getDimensions();
+
+        /**
+         * Get serialized map (only cells with cost > 0).
+         * Efficient for network transmission.
+         * @return Compact map representation
+         */
+        Map getMap();
+    };
 };
 
