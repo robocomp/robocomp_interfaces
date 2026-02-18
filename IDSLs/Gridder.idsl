@@ -78,10 +78,63 @@ module RoboCompGridder
         TCellVector cells;      // Cells with cost > 0
     };
 
+    // Robot pose with covariance
+    sequence<float> Covariance;
+    struct Pose
+    {
+        float x;          // mm - x position
+        float y;          // mm - y position
+        float theta;      // radians - orientation
+        Covariance cov;  // Flattened 3x3 covariance matrix
+    };
+
+    // =========================================================================
+    // Navigation Control Structures
+    // =========================================================================
+
+    /**
+     * Navigation state enumeration
+     * Represents the current state of the navigation controller
+     */
+    enum NavigationState {
+        IDLE,           // No target set, robot stopped
+        NAVIGATING,     // Moving towards target
+        PAUSED,         // Stopped but target still active (can resume)
+        REACHED,        // Target reached, robot stopped
+        BLOCKED,        // Path blocked, attempting to replan
+        ERROR           // Critical error (localization lost, etc.)
+    };
+
+    /**
+     * Navigation options for customizing navigation behavior
+     */
+    struct NavigationOptions {
+        float maxSpeed;         // mm/s - maximum allowed speed (0 = use default)
+        float safetyFactor;     // 0.0-1.0 - prefer safer paths (0=fastest, 1=safest)
+        bool useEsdf;           // Use ESDF for smooth obstacle costs
+        bool allowReplan;       // Allow automatic replanning if path blocked
+    };
+
+    /**
+     * Complete navigation status
+     * Provides full information about current navigation state
+     */
+    struct NavigationStatus {
+        NavigationState state;          // Current navigation state
+        TPoint currentTarget;           // Current target (0,0 if IDLE)
+        TPoint currentPosition;         // Robot's estimated position
+        float currentOrientation;       // Robot's estimated orientation (radians)
+        float distanceToTarget;         // mm - remaining distance to target
+        float estimatedTime;            // seconds - estimated time to arrival
+        float currentSpeed;             // mm/s - current robot speed
+        int pathWaypointsRemaining;     // Number of waypoints remaining in path
+        string statusMessage;           // Human-readable status message
+    };
+
     /**
      * Gridder Interface
      *
-     * Provides path planning and occupancy grid services.
+     * Provides path planning, occupancy grid services, and navigation control.
      */
     interface Gridder
     {
@@ -151,6 +204,102 @@ module RoboCompGridder
          * @return Compact map representation
          */
         Map getMap();
+
+         /**
+         * Get robot pose and pose covariance
+         */
+        Pose getPose();
+
+        // =====================================================================
+        // Navigation Control Methods
+        // =====================================================================
+
+        /**
+         * Set navigation target and start navigating.
+         * Computes path and begins navigation immediately.
+         * @param target Destination point
+         * @return True if target is valid and reachable
+         */
+        bool setTarget(TPoint target);
+
+        /**
+         * Set navigation target with custom options.
+         * @param target Destination point
+         * @param options Navigation configuration (speed, safety, etc.)
+         * @return True if target is valid and reachable
+         */
+        bool setTargetWithOptions(TPoint target, NavigationOptions options);
+
+        /**
+         * Start or resume navigation to current target.
+         * @return True if navigation started (false if no target set)
+         */
+        bool startNavigation();
+
+        /**
+         * Stop robot but keep current target.
+         * Robot can be resumed with startNavigation() or resumeNavigation().
+         * Sets state to PAUSED.
+         */
+        void stopNavigation();
+
+        /**
+         * Resume navigation after stop/pause.
+         * @return True if navigation resumed (false if no target or already navigating)
+         */
+        bool resumeNavigation();
+
+        /**
+         * Cancel navigation completely.
+         * Stops the robot AND clears the current target.
+         * Sets state to IDLE.
+         */
+        void cancelNavigation();
+
+        /**
+         * Force path replanning to current target.
+         * Useful when environment has changed significantly.
+         * @return True if new path found
+         */
+        bool replanPath();
+
+        /**
+         * Get current navigation state.
+         * @return Current state (IDLE, NAVIGATING, PAUSED, REACHED, BLOCKED, ERROR)
+         */
+        NavigationState getNavigationState();
+
+        /**
+         * Get complete navigation status.
+         * Includes state, target, position, distances, timing, etc.
+         * @return Full navigation status structure
+         */
+        NavigationStatus getNavigationStatus();
+
+        /**
+         * Get current navigation target.
+         * @return Current target point (0,0,0 if no target set)
+         */
+        TPoint getTarget();
+
+        /**
+         * Get remaining distance to target.
+         * @return Distance in mm (0 if no target or reached)
+         */
+        float getDistanceToTarget();
+
+        /**
+         * Get estimated time to reach target.
+         * @return Estimated time in seconds (-1 if cannot estimate)
+         */
+        float getEstimatedTimeToTarget();
+
+        /**
+         * Check if robot has reached the current target.
+         * @return True if target reached (state == REACHED)
+         */
+        bool hasReachedTarget();
+
     };
 };
 
