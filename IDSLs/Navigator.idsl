@@ -1,22 +1,99 @@
-import "Ar.idsl";
-module RoboCompNavigator{
+/*
+ * Navigator Interface
+ * =================
+ *
+ * ICE interface for the ainf_slamo component, providing localization, path planning and control services.
+ *
+ * Main Services:
+ *   - Path planning between two points with configurable safety
+ *   - Line-of-sight checking for direct paths
+ *   - Space layout serialization for efficient communication
+ *   - Target definition and management for navigation tasks
+ *   - Navigation control for local path following and obstacle avoidance
 
-  	struct Stage{
-		int x;
-  		int z;
-  	};
-  	sequence<Stage> Trajectory;
+ * Data Structures:
+ *   - TPoint: 2D point  (for obstacle/robot representation)
+ *   - TPath: Sequences of points representing paths
+ *   - Result: Path computation result with status and multiple path options
+ *
+ * Usage Example (C++):
+ *   auto result = ainf_slamo_proxy->getPath(source, target, safety);
+ *   ainf_slamo_proxy->setTarget(1.0, 0.0); // Move to (1.0, 0.0)
+ *   ainf_slamo_proxy->gotoObject("planta 1 hall");
+ *   ainf_slamo_proxy->stop(0.0, 0.0, 0.0);
+ *   ainf_slamo_proxy->resume(0.0, 0.0, 0.0);
+ *   ainf_slamo_proxy->getLayout(); // Get space layout for visualization
+ *
+ * Author: RoboLab - University of Extremadura
+ * Date: 2024-2025
+ */
 
-	interface LocalNavigator{
-    	void stop();
-	 	bool isActive();
-    	bool goTo(float x, float z, float angle);
-    	void setOdometry(float x, float z, float angle);
-    	void setPathVel(Trajectory path, float advVel, float rotVel);
-  	};
-  	
-  	interface LocalNavigatorReportState{
-		void reportRobotState( float distanceToGoal, float angToGoal, int timeElapsed, bool finish);
-		void reportRobotPose(float x, float z, float angle);
+module RoboCompNavigator
+{
+    // 2D point with optional bounding radius
+	struct TPoint
+	{
+		float x;        // mm - x coordinate
+        float y;        // mm - y coordinate
+	};
+  	sequence<TPoint> Path;
+
+    // Path computation result
+	struct Result
+	{
+		TPath path;       // Computed paths (may be empty if no path found)
+		long timestamp;     // Computation timestamp (ms since epoch)
+		string errorMsg;    // Error/status message
+		bool valid;         // True if computation succeeded
+	};
+
+	// Robot pose with covariance
+    sequence<float> Covariance;
+    struct Pose
+    {
+        float x;          // mm - x position
+        float y;          // mm - y position
+        float theta;      // radians - orientation
+        Covariance
     };
+
+    /**
+     * Navigation state enumeration
+     * Represents the current state of the navigation controller
+     */
+    enum NavigationState {
+        IDLE,           // No target set, robot stopped
+        NAVIGATING,     // Moving towards target
+        PAUSED,         // Stopped but target still active (can resume)
+        REACHED,        // Target reached, robot stopped
+        BLOCKED,        // Path blocked, attempting to replan
+        ERROR           // Critical error (localization lost, etc.)
+    };
+
+    /**
+     * Complete navigation status
+     * Provides full information about current navigation state
+     */
+    struct NavigationStatus {
+        NavigationState state;          // Current navigation state
+        TPoint currentTarget;           // Current target (0,0 if IDLE)
+        TPoint currentPosition;         // Robot's estimated position
+        float currentOrientation;       // Robot's estimated orientation (radians)
+        float distanceToTarget;         // mm - remaining distance to target
+        float estimatedTime;            // seconds - estimated time to arrival
+        float currentSpeed;             // mm/s - current robot speed
+        int pathWaypointsRemaining;     // Number of waypoints remaining in path
+        string statusMessage;           // Human-readable status message
+    };
+
+	interface LocalNavigator
+	{
+	    Result getPath(TPoint source, TPoint target, float safety);
+	    Layout getLayout();
+        void stop();
+	    void setTarget(TPoint source, TPoint target);
+	    void resume();
+        bool gotoObject(string object);
+  	};
+
 };
