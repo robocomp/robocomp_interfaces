@@ -33,28 +33,28 @@ module RoboCompNavigator
     // 2D point with optional bounding radius
 	struct TPoint
 	{
-		float x;        // mm - x coordinate
-        float y;        // mm - y coordinate
+		float x;        // m - x coordinate
+        float y;        // m - y coordinate
 	};
-  	sequence<TPoint> Path;
+  	sequence<TPoint> TPath;
 
     // Path computation result
 	struct Result
 	{
-		TPath path;       // Computed paths (may be empty if no path found)
+		TPath path;         // Computed paths (may be empty if no path found)
 		long timestamp;     // Computation timestamp (ms since epoch)
 		string errorMsg;    // Error/status message
 		bool valid;         // True if computation succeeded
 	};
 
 	// Robot pose with covariance
-    sequence<float> Covariance;
+    sequence<float> TCov;
     struct Pose
     {
-        float x;          // mm - x position
-        float y;          // mm - y position
+        float x;          // m - x position
+        float y;          // m - y position
         float theta;      // radians - orientation
-        Covariance
+        TCov cov;         // xx xy xt yy yt tt
     };
 
     /**
@@ -79,21 +79,34 @@ module RoboCompNavigator
         TPoint currentTarget;           // Current target (0,0 if IDLE)
         TPoint currentPosition;         // Robot's estimated position
         float currentOrientation;       // Robot's estimated orientation (radians)
-        float distanceToTarget;         // mm - remaining distance to target
+        float distanceToTarget;         // m - remaining distance to target
         float estimatedTime;            // seconds - estimated time to arrival
-        float currentSpeed;             // mm/s - current robot speed
+        float currentSpeed;             // m/s - current robot speed
         int pathWaypointsRemaining;     // Number of waypoints remaining in path
         string statusMessage;           // Human-readable status message
     };
 
-	interface LocalNavigator
+    sequence<TPoint> TLayout;
+    struct TObject
+    {
+        string name;
+        TLayout layout;
+    };
+    sequence<TObject> TObjects;
+    struct LayoutData
+    {
+        TLayout layout;
+        TObjects objects;
+    };
+
+	interface Navigator
 	{
 	    Result getPath(TPoint source, TPoint target, float safety);
-	    Layout getLayout();
+	    LayoutData getLayout();
         void stop();
-	    void setTarget(TPoint source, TPoint target);
-	    void resume();
-        bool gotoObject(string object);
+	    TPoint gotoPoint(TPoint target);
+	    TPoint gotoObject(string object);
+        void resume();
   	};
 
 };
