@@ -98,6 +98,13 @@ module RoboCompNavigator
         TLayout layout;
         TObjects objects;
     };
+    struct TPose
+    {
+        float x; // m/s
+        float y; // m/s
+        float r; // rad/s
+
+    };
 
 	interface Navigator
 	{
@@ -107,6 +114,8 @@ module RoboCompNavigator
 	    TPoint gotoPoint(TPoint target);
 	    TPoint gotoObject(string object);
         void resume();
+        TPose getRobotPose();
+        NavigationStatus getStatus();
   	};
 
 };
