@@ -1,0 +1,71 @@
+module RoboCompImageSegmentation
+{
+  // Basic structures for 2D and 3D points
+  struct Point2D { int x; int y; };
+  struct Point3D { float x; float y; float z; };
+
+  // Sequences definitions
+  sequence<Point2D> Polygon;
+  sequence<Point3D> PointCloud;
+
+  // Segmented Object structure
+  struct SegmentedObject
+  {
+    string label;              // Class/Label of the detected object
+    float score;               // Confidence score of the detection
+    Polygon imagePolygon;      // The (u, v) points forming the contour on the 2D image
+    PointCloud points3D;       // The (X, Y, Z) coordinates corresponding to the segmented area
+  };
+
+  // List of objects
+  sequence<SegmentedObject> ObjectList;
+
+  sequence<byte> ImgType;
+
+  struct TImage
+  {
+	
+    bool compressed; // opencv jpeg compression
+    int cameraID;
+    int width;
+    int height;
+    int depth;
+    int focalx;
+    int focaly;
+    long alivetime;   // creation time in ms
+    float period;     // acquisition period in ms
+    ImgType image;
+  };
+
+  sequence <byte> DepthType;
+  struct TDepth
+  {
+    bool compressed; // opencv jpeg compression
+    int cameraID;
+    int width;
+    int height;
+    int focalx;
+    int focaly;
+    long alivetime;  // creation time in ms
+    float period;    // ms
+    float depthFactor;
+    DepthType depth;
+  };
+ 
+  struct TData
+  {
+    ObjectList objects;
+    TImage image;
+    TDepth depth;
+    long timestamp;
+  };
+
+  // The main interface being served
+  interface ImageSegmentation
+  {
+    ObjectList getSegmentedObjects(bool points3d);
+    TImage getImage();
+    TDepth getDepth();
+    TData getAll(bool points3d);
+  };
+};
