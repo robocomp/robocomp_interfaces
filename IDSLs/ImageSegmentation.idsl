@@ -1,12 +1,38 @@
 module RoboCompImageSegmentation
 {
   // Basic structures for 2D and 3D points
-  struct Point2D { int x; int y; };
-  struct Point3D { float x; float y; float z; };
+  //struct Point2D { int x; int y; };
+  //struct Point3D { float x; float y; float z; };
 
   // Sequences definitions
-  sequence<Point2D> Polygon;
-  sequence<Point3D> PointCloud;
+  //sequence<Point2D> Polygon;
+  //sequence<Point3D> PointCloud;
+
+  sequence<int> TIntArray;
+  sequence<float> TFloatArray;
+  sequence<byte> TByteArray;
+
+
+  struct PointCloud
+  {
+    TFloatArray X;
+    TFloatArray Y;
+    TFloatArray Z;
+    TByteArray R;
+    TByteArray G;
+    TByteArray B;
+
+    long timestamp;
+    long numberPoints;
+  };
+
+  struct Polygon
+  {
+    TIntArray U;
+    TIntArray V;
+    long timestamp;
+    long numberPoints;
+  };
 
   // Segmented Object structure
   struct SegmentedObject
@@ -63,9 +89,9 @@ module RoboCompImageSegmentation
   // The main interface being served
   interface ImageSegmentation
   {
-    ObjectList getSegmentedObjects(bool points3d);
+    ObjectList getSegmentedObjects(bool points3d, bool rgb);
     TImage getImage();
     TDepth getDepth();
-    TData getAll(bool points3d);
+    TData getAll(bool points3d, bool rgb);
   };
 };
