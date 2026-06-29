@@ -78,7 +78,7 @@ module RoboCompLidar3D
 	TData getLidarDataProyectedInImage(string name);
 	TDataCategory getLidarDataByCategory(TCategories categories, long timestamp);
 	TDataImage getLidarDataArrayProyectedInImage(string name);
-    TColorCloudData getColorCloudData();
+  TColorCloudData getColorCloudData();
 
   };
 };

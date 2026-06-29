@@ -1,4 +1,5 @@
 import "Gridder.idsl";
+import "KinovaArm.idsl";
 
 module RoboCompWebots2Robocomp
 {
@@ -28,7 +29,13 @@ module RoboCompWebots2Robocomp
 		void setPathToHuman(int humanId, RoboCompGridder::TPath path);
 		void setDoorAngle(float angle);
                 ObjectPose getObjectPose(string DEF);
+                void setObjectPose(string DEF, ObjectPose pose);
 		void resetWebots();
+		// Instantly place the arm joints at the given angles via the Webots
+		// supervisor (setJointPosition, no dynamics) — a sim-only teleport with
+		// no hardware analog, used to recover a jammed arm during long unattended
+		// experiments without sweeping the gripper through the table.
+		void setArmJointsInstant(RoboCompKinovaArm::TJointAngles angles);
         };
 };
 

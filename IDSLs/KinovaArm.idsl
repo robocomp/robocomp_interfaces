@@ -36,11 +36,16 @@ module RoboCompKinovaArm
 	struct TGripper
 	{
 	    float opening;
-	    float lforce;
-	    float ltipforce;
-	    float rforce;
-	    float rtipforce;
-	    float distance;
+	    float lforce;        // left  finger linear-motor force feedback (grip/clamp force, N) — grip-confirm signal
+	    float rforce;        // right finger linear-motor force feedback (grip/clamp force, N)
+	    // Raw fingertip force-3d CONTACT vectors (N), per pad, in the sensor (finger) frame. These REPLACE
+	    // the old scalar ltipforce/rtipforce magnitudes (= the norm of these): the components carry the
+	    // LATERAL/shear direction the compliant close needs to centre the bottle between the pads.
+	    float lfx; float lfy; float lfz;   // left  pad force-3d {Fx,Fy,Fz}
+	    float rfx; float rfy; float rfz;   // right pad force-3d {Fx,Fy,Fz}
+	    bool  ltipcontact;   // distal-tip bumper, left finger  (binary contact, no force-relaxation)
+	    bool  rtipcontact;   // distal-tip bumper, right finger
+	    float distance;      // back-of-gripper point lidar → object distance (future; populated by bridge)
 	};
 	
 	struct TJoint

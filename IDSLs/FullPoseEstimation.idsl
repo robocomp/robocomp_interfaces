@@ -24,15 +24,15 @@ module RoboCompFullPoseEstimation
     struct FullPoseEuler
     {
         string source;
-        float x;  float y;  float z;        // position in world frame
+        float x;  float y;  float z;         // position in world frame
         float rx; float ry; float rz;
-	float vx; float vy; float vz;       // speed in world frame
-	float vrx; float vry; float vrz;
-	float ax; float ay; float az;    // Aceleration in world frame
-	float arx; float ary; float arz;
-	float adv; float side; float rot;   // speed in local robot frame
-	CovMatrix poseCov; CovMatrix velCov; CovMatrix accCov;
-	int confidence;
+	    float vx; float vy; float vz;        // speed in world frame
+	    float vrx; float vry; float vrz;
+    	float ax; float ay; float az;        // Aceleration in world frame
+	    float arx; float ary; float arz;
+	    float adv; float side; float rot;    // speed in local robot frame
+	    CovMatrix poseCov; CovMatrix velCov; CovMatrix accCov;
+	    int confidence;
     	long timestamp;
     };
 
