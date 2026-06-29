@@ -1,0 +1,21 @@
+module RoboCompForceTorqueSensor
+{
+	
+	struct SensorData
+	{
+	    float fx;
+	    float fy;
+	    float fz;
+	    float tx;
+	    float ty;
+	    float tz;
+	    float temperature;
+	    long  timestamp;
+	    bool  valid;  
+	};
+
+	interface ForceTorqueSensor
+	{
+		SensorData getSensorData();
+	};
+};
