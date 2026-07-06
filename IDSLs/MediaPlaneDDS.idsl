@@ -1,0 +1,11 @@
+module RoboCompMediaPlaneDDS
+{
+  interface MediaPlaneDDS
+  {
+    // Returns the rc::media::MediaDescriptor as a JSON string describing this
+    // component's zero-copy DDS media plane (domain, topic names, type tag, QoS).
+    // Returns an empty string ("") when the component is NOT currently publishing
+    // on DDS, so a consumer can fall back to bridging the frames itself.
+    string getMediaDescriptor();
+  };
+};
