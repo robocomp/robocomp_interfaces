@@ -113,6 +113,7 @@ module RoboCompNavigator
         void stop();
 	    TPoint gotoPoint(TPoint target);
 	    TPoint gotoObject(string object);
+	    TPose gotoPose(TPose pose);
         void resume();
         TPose getRobotPose();
         NavigationStatus getStatus();
