@@ -27,7 +27,12 @@ module RoboCompWebots2Robocomp
         interface Webots2Robocomp
         {
 		void setPathToHuman(int humanId, RoboCompGridder::TPath path);
-		void setDoorAngle(float angle);
+		// Open/close the hinged door whose Webots DEF is given, by writing its hinge
+		// `position` field directly (a supervisor teleport, no dynamics — same class of
+		// sim-only shortcut as setArmJointsInstant). angle is in RADIANS and is clamped
+		// to [-pi, 0]; 0 = flush in the aperture. The DEF is required: a scene has more
+		// than one door, and the caller is the one that knows which door it means.
+		void setDoorAngle(string DEF, float angle);
                 ObjectPose getObjectPose(string DEF);
                 void setObjectPose(string DEF, ObjectPose pose);
 		void resetWebots();
