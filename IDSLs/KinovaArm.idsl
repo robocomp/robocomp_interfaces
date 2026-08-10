@@ -94,6 +94,7 @@ module RoboCompKinovaArm
 		void setCenterOfTool (TPose pose, ArmJoints referencedTo);
 		void moveJointsWithSpeed(TJointSpeeds speeds);
 		void moveJointsWithAngle(TJointAngles angles);
+		void stopArm();
 	};
 };
 
