@@ -1,0 +1,104 @@
+// DoorControl — ask for a door to be opened or closed, without knowing WHO or WHAT will do it.
+//
+// The provider may be a simulator supervisor (webots-bridge), a home-automation bridge wired to the
+// apartment's real actuators, or a speech component that asks a person to do it. The caller must be
+// able to issue the same request to any of them, and to price them differently: a relay costs
+// nothing, a person does.
+//
+// Three things this interface deliberately encodes:
+//
+//  1. NOTHING HERE REPORTS THAT A DOOR IS OPEN. It reports what the provider did about a REQUEST.
+//     Whether the door actually moved is settled by perception, never by these return values.
+//
+//  2. THE CALLER OWNS THE ASSOCIATION. A provider advertises the doors it can act on, each with its
+//     own opaque id and its pose; the caller — which is the one doing perception and frame algebra —
+//     matches those against the doors it has fitted. A provider is never asked to understand
+//     "rooms". A provider that can act on ANY door (a speech component) advertises none, and reads
+//     the pose out of the request instead.
+//
+//  3. A REFUSAL IS INFORMATION. Its reason distinguishes "never ask again" from "ask later" from
+//     "a person said no" — three different beliefs about the door, and three different policies.
+//
+// Poses are MILLIMETRES and RADIANS in the world/map frame (the DSR root frame), matching
+// Webots2Robocomp::getObjectPose.
+
+module RoboCompDoorControl
+{
+    exception DoorControlFailed { string what; };
+
+    enum DoorAction { OpenDoor, CloseDoor };
+
+    enum RefusalReason
+    {
+        NoRefusal,        // accepted
+        UnknownDoor,      // this provider has no actuator for that door -> do not retry
+        NotActuable,      // it knows the door and cannot move it (no motor, locked) -> do not retry
+        TemporarilyBusy,  // retry later
+        Declined          // a human was asked and said no -> retrying is a social act, price it
+    };
+
+    enum RequestState { Queued, InProgress, Delivered, Aborted };
+
+    struct Pose2D
+    {
+        float x;      // mm, world frame
+        float y;      // mm, world frame
+        float angle;  // rad, wall normal
+    };
+
+    // One door as somebody knows it. From a provider (in getCapabilities) `id` is the provider's own
+    // handle for it — a Webots DEF, a Z-Wave node, anything. From a caller (in DoorRequest.door)
+    // `id` is the caller's own persistent identity, and the pose is what a provider with no door
+    // list uses to resolve it by place, or to tell a person which door is meant.
+    struct DoorRef
+    {
+        string id;
+        Pose2D pose;
+        float width;   // mm
+    };
+    sequence <DoorRef> DoorRefList;
+
+    struct DoorRequest
+    {
+        string doorId;       // an id from getCapabilities().doors; empty if the provider listed none
+        DoorRef door;        // always filled: the caller's own identity and where the door is
+        DoorAction action;
+        float apertureHint;  // rad, 0 = flush. Providers that are binary ignore it.
+        string purpose;      // why the robot wants it — a speech provider utters this
+    };
+
+    struct RequestAck
+    {
+        int requestId;
+        bool accepted;
+        RefusalReason refusal;
+        float expectedLatencySec;
+    };
+
+    struct RequestStatus
+    {
+        int requestId;
+        RequestState state;
+        RefusalReason refusal;
+    };
+
+    // Read once, so the caller can decide whether to OFFER this affordance at all and what it costs.
+    // This replaces "is the bridge peer present?", which cannot express a peer that is present but
+    // cannot move THIS door.
+    struct Capabilities
+    {
+        bool canActuate;
+        bool continuousAngle;   // false => open/closed only, apertureHint ignored
+        bool requiresHuman;     // true => every request is a social act with a real cost
+        float typicalLatencySec;
+        DoorRefList doors;      // empty => "ask me about any door, I resolve it from the request"
+    };
+
+    interface DoorControl
+    {
+        Capabilities getCapabilities();
+        RequestAck requestDoor(DoorRequest req) throws DoorControlFailed;
+        RequestStatus getRequestStatus(int requestId);
+        void cancelRequest(int requestId);
+    };
+};
