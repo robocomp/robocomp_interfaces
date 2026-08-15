@@ -1,35 +1,74 @@
 module RoboCompIMU
 {
+	// Row-major 3x3 covariance of the three components of the struct that carries it, in the SAME
+	// order they are declared (so m00 is the variance of XAcc / XGyr / XMag / Roll).
+	//
+	// UNITS: per-sample VARIANCE of the reported quantity, in SI units squared -- (m/s^2)^2 for
+	// Acceleration, (rad/s)^2 for Gyroscope, rad^2 for Orientation. It is NOT a noise density.
+	// A consumer wanting a density (sigma^2 per second, so the variance over an interval T is
+	// sigma^2*T) divides by the sampling interval, which simTimestamp below makes exactly known.
+	//
+	// Following the sensor_msgs/Imu convention, m00 = -1 means "covariance unknown". Fill that
+	// rather than zeros: a zero variance reads downstream as infinite confidence.
+	struct Cov3
+	{
+		float m00; float m01; float m02;
+		float m10; float m11; float m12;
+		float m20; float m21; float m22;
+	};
+
+	// Every struct below carries provenance and BOTH clocks:
+	//   timestamp    - wall-clock epoch ms, ALWAYS. Unchanged meaning; still what to use for
+	//                  latency, staleness and watchdogs, in simulation too.
+	//   simTimestamp - the instant the sample was ACQUIRED, on the simulator's own clock (ms since
+	//                  world load). 0 when simulated is false. A simulated gyro reports rad per
+	//                  SIMULATION second, so anything integrating it must integrate over THIS
+	//                  clock, not over timestamp, or it over-counts by the sim/wall ratio.
+	//   simulated    - true when a simulator produced this sample. Lets a consumer pick its time
+	//                  base from the data instead of from a config flag it could get wrong, and
+	//                  keeps working when real and simulated sources share a topic.
 	struct Acceleration
 	{
 		float XAcc;
 		float YAcc;
 		float ZAcc;
+		Cov3 cov;
 		long timestamp;
+		long simTimestamp;
+		bool simulated;
 	};
-	
+
 	struct Gyroscope
 	{
 		float XGyr;
 		float YGyr;
 		float ZGyr;
+		Cov3 cov;
 		long timestamp;
+		long simTimestamp;
+		bool simulated;
 	};
-	
+
 	struct Magnetic
 	{
 		float XMag;
 		float YMag;
 		float ZMag;
+		Cov3 cov;
 		long timestamp;
+		long simTimestamp;
+		bool simulated;
 	};
-	
+
 	struct Orientation
 	{
 		float Roll;
 		float Pitch;
 		float Yaw;
+		Cov3 cov;
 		long timestamp;
+		long simTimestamp;
+		bool simulated;
 	};
 	
 	struct DataImu {

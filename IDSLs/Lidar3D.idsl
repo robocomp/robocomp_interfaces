@@ -23,9 +23,21 @@ module RoboCompLidar3D
   sequence<short> TShortArray;
   sequence<byte> TByteArray;
 
+  // Provenance and clock, carried by every struct below that has a `timestamp`.
+  //   timestamp    - wall-clock epoch ms, ALWAYS. Unchanged meaning; keep using it for latency,
+  //                  staleness and watchdogs, in simulation too.
+  //   simTimestamp - the instant the sample was ACQUIRED, on the simulator's own clock (ms since
+  //                  world load). 0 when `simulated` is false. A simulator's velocities and rates
+  //                  are per SIMULATION second, so anything integrating them must integrate over
+  //                  this clock, not over `timestamp`, or it over-counts by the sim/wall ratio.
+  //   simulated    - true when a simulator produced this sample. Lets a consumer pick its time base
+  //                  from the data instead of from a config flag it could get wrong, and keeps
+  //                  working when real and simulated sources share a topic.
   struct TDataImage
   {
       long timestamp;
+      long simTimestamp;
+      bool simulated;
       TFloatArray XArray;
       TFloatArray YArray;
       TFloatArray ZArray;
@@ -38,6 +50,8 @@ module RoboCompLidar3D
     TPoints points;
     float period;
     long timestamp;
+    long simTimestamp;
+    bool simulated;
   };
   
   struct TDataCategory
@@ -49,6 +63,8 @@ module RoboCompLidar3D
     TCategories CategoriesArray;
     float period;
     long timestamp;
+    long simTimestamp;
+    bool simulated;
   };
 
   struct TColorCloudData 
@@ -60,6 +76,8 @@ module RoboCompLidar3D
     TByteArray G;
     TByteArray B;
     long timestamp;
+    long simTimestamp;
+    bool simulated;
     long numberPoints;
     
     //compressed data, include R, G and B as compress data

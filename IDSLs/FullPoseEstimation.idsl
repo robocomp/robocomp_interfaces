@@ -2,6 +2,18 @@ module RoboCompFullPoseEstimation
 {
     exception HardwareFailedException { string what; };
 
+    // Both pose structs below carry provenance and BOTH clocks:
+    //   source       - who produced this sample, e.g. "webots-bridge", "SVD48VBase", "zed".
+    //   timestamp    - wall-clock epoch ms, ALWAYS. Unchanged meaning; still what to use for
+    //                  latency, staleness and watchdogs, in simulation too.
+    //   simTimestamp - the instant the sample refers to, on the simulator's own clock (ms since
+    //                  world load). 0 when simulated is false. A simulator's velocities are per
+    //                  SIMULATION second, so anything integrating them must integrate over THIS
+    //                  clock, not over timestamp, or it over-counts by the sim/wall ratio.
+    //   simulated    - true when a simulator produced this sample. Lets a consumer pick its time
+    //                  base from the data instead of from a config flag it could get wrong, and
+    //                  keeps working when real and simulated sources share this topic -- which they
+    //                  do: the base controller and the visual-inertial estimator both publish here.
     struct FullPoseMatrix
     {
         string source;
@@ -10,7 +22,15 @@ module RoboCompFullPoseEstimation
 	    float m20;  float m21;  float m22; float m23;
 	    float m30;  float m31;  float m32; float m33;
     	long timestamp;
+    	long simTimestamp;
+    	bool simulated;
     };
+    // UNITS: per-sample VARIANCE of the reported quantity, in SI units squared -- so velCov's
+    // diagonal is (m/s)^2 and (rad/s)^2, poseCov's is m^2 and rad^2. It is NOT a noise density.
+    // A consumer wanting a density (sigma^2 per second, so the variance over an interval T is
+    // sigma^2*T) divides by the sampling interval, which simTimestamp makes exactly known.
+    // Following the sensor_msgs convention, m00 = -1 means "covariance unknown". Fill that rather
+    // than zeros: a zero variance reads downstream as infinite confidence.
     struct CovMatrix
     {
         float m00;  float m01;  float m02; float m03; float m04; float m05;
@@ -34,6 +54,8 @@ module RoboCompFullPoseEstimation
 	    CovMatrix poseCov; CovMatrix velCov; CovMatrix accCov;
 	    int confidence;
     	long timestamp;
+    	long simTimestamp;
+    	bool simulated;
     };
 
     interface FullPoseEstimation
