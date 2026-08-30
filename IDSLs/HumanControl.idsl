@@ -1,0 +1,126 @@
+// HumanControl — drive one or more simulated people around the scene.
+//
+// The provider is a bridge to whatever animates the human. Today that is the Webots
+// `Pedestrian` PROTO driven by the `human_walker` controller (webots-piso); tomorrow it could be a
+// different simulator, or a motion-capture playback. Callers must not need to know which.
+//
+// Three things this interface deliberately encodes:
+//
+//  1. THIS IS ACTUATION, NOT PERCEPTION. Nothing here tells the robot where a person IS. It tells
+//     the caller what it ASKED a person-animator to do, and what that animator reports back about
+//     its own state. Where the robot believes a person is remains a matter for its own perception —
+//     otherwise a scripted actor becomes ground truth by the back door, and every detector that
+//     reads it stops being tested.
+//
+//  2. A REACH REPORTS ITS RESIDUAL. The provider's arm may be geometrically unable to put a palm on
+//     a requested point. `ReachResult` always carries how far it actually ended up, and no call
+//     returns a bare success that hides a 40 cm miss.
+//
+//  3. THE CALLER NAMES THE HUMAN. A provider advertises the humans it animates, each with its own
+//     name; there is no implicit "the human". A caller with one person just takes the first.
+//
+// UNITS ARE METRES AND RADIANS in the world/map frame -- the same units the animator underneath
+// already works in, so distances pass straight through and there is no conversion left to get
+// wrong. This deliberately differs from Webots2Robocomp::getObjectPose and DoorControl, which are
+// in millimetres: a caller that talks to both converts at that boundary, not at this one.
+
+module RoboCompHumanControl
+{
+    exception HumanControlFailed { string what; };
+
+    // What the human is doing with its feet. Mirrors the animator's own mode, so a caller can tell
+    // "it is walking a route" from "it is holding still" without inferring it from velocities.
+    enum HumanMode
+    {
+        HumanIdle,       // no motion command outstanding
+        HumanVelocity,   // running an open-loop (adv, rot)
+        HumanGoingTo,    // closing on a single point, will stop there
+        HumanFollowing,  // walking a route
+        HumanTurning     // turning on the spot to a heading
+    };
+
+    enum ArmSide { LeftArm, RightArm, BothArms };
+
+    // WorldFrame: a place in the room. Walk away and the palm comes off it, and the residual grows.
+    // BodyFrame:  a pose relative to the human, which travels with them (carrying, gesturing).
+    enum ReachFrame { WorldFrame, BodyFrame };
+
+    struct Point2D { float x; float y; };            // m, world frame
+    sequence<Point2D> Point2DList;
+
+    struct Point3D { float x; float y; float z; };   // m, world frame unless a BodyFrame reach
+
+    struct ArmState
+    {
+        bool held;            // false => the arm is swinging with the walk cycle, nothing else true
+        bool reached;         // the palm is on the target, to the provider's own tolerance
+        float residual;       // m from palm to the requested target — the number that matters
+        Point3D palm;         // m, world frame; valid whether or not the arm is held
+        Point3D target;       // m; only meaningful when held
+        ReachFrame frame;
+    };
+
+    struct HumanState
+    {
+        string name;
+        bool connected;       // false => the bridge cannot reach the animator; every field is stale
+        long timestamp;       // ms since epoch, when the bridge read this snapshot
+        float simTime;        // s, the animator's own clock
+        float x;              // m, world frame
+        float y;              // m, world frame
+        float alpha;          // rad, yaw; 0 faces +x
+        float adv;            // m/s, forward
+        float rot;            // rad/s, positive turns left
+        HumanMode mode;
+        ArmState leftArm;
+        ArmState rightArm;
+    };
+    sequence<HumanState> HumanStateList;
+
+    struct ReachResult
+    {
+        bool accepted;        // the animator took the request
+        bool reachable;       // the palm is on the target, to the provider's tolerance
+        float residual;       // m, palm to target
+        float outOfPlane;     // m of the residual the arm can never remove by bending
+        bool bodyYawExists;   // false => no body yaw was solved: either a BodyFrame reach, which
+                              //          needs none, or a WorldFrame target so close to the body
+                              //          axis that no orientation brings it into the arm's plane.
+                              //          `reason` distinguishes them; `reachable` is the verdict.
+        float bodyYaw;        // rad, the yaw the human turns to; valid when bodyYawExists
+        float standDistance;  // m, how far from the target the body ends up standing
+        string reason;        // why it is not reachable; empty when it is
+    };
+
+    interface HumanControl
+    {
+        // Every human this provider animates, with its latest state. Cheap: the bridge polls the
+        // animator on its own clock and answers from the cache, so a caller can read this at
+        // control rate without stalling on a socket.
+        idempotent HumanStateList getHumans();
+        idempotent HumanState getState(string name) throws HumanControlFailed;
+
+        // Locomotion. `adv` m/s (negative walks backwards), `rot` rad/s.
+        void setSpeed(string name, float adv, float rot) throws HumanControlFailed;
+        void stop(string name) throws HumanControlFailed;
+
+        // Closed loop, both hand control back and stop on arrival. `tolerance` is m.
+        void goTo(string name, Point2D target, float tolerance) throws HumanControlFailed;
+        void followRoute(string name, Point2DList route, bool loop, float tolerance)
+            throws HumanControlFailed;
+        void faceTo(string name, Point2D target) throws HumanControlFailed;
+
+        // Put the human somewhere without walking there. A jump in a person's pose is a lie to any
+        // tracker watching, so this is for scene setup, not for driving.
+        void setPose(string name, Point2D position, float alpha) throws HumanControlFailed;
+
+        // Arms and head. `reach` may turn the body when `turnBody` is set, because a single-hinge
+        // shoulder cannot otherwise bring an arbitrary point into the arm's plane.
+        ReachResult reach(string name, ArmSide arm, Point3D target, ReachFrame frame, bool turnBody)
+            throws HumanControlFailed;
+        void setArmJoints(string name, ArmSide arm, float shoulder, float elbow, float wrist)
+            throws HumanControlFailed;
+        void relaxArm(string name, ArmSide arm) throws HumanControlFailed;
+        void setHead(string name, float pitch) throws HumanControlFailed;  // rad, a nod
+    };
+};
