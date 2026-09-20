@@ -1,8 +1,9 @@
 // HumanControl — drive one or more simulated people around the scene.
 //
 // The provider is a bridge to whatever animates the human. Today that is the Webots
-// `Pedestrian` PROTO driven by the `human_walker` controller (webots-piso); tomorrow it could be a
-// different simulator, or a motion-capture playback. Callers must not need to know which.
+// `Pedestrian` PROTO driven by the `human_walker` controller (webots-shadow/worlds/avatar);
+// tomorrow it could be a different simulator, or a motion-capture playback. Callers must not need
+// to know which.
 //
 // Three things this interface deliberately encodes:
 //
