@@ -1,15 +1,17 @@
 module RoboCompDroneControl
 {
 	// Robot frame: +x right, +y forward, +z up. Metres and radians; yaw is CCW about +z,
-	// measured from the drone's own nose.
+	// measured from the drone's own nose. Yaw 0 = the drone's nose along the robot's +x (the
+	// robot's RIGHT, not its forward).
 	struct TPose
 	{
 		float x;
 		float y;
 		float z;
 		float yaw;
-		// Wall-clock ms since the epoch at which the server wrote this pose -- the SAME clock as
-		// the camera images' alivetime, so a pose can be matched to the frame it was seen from.
+		// Wall-clock ms since the epoch of the instant this pose is in effect in the simulation --
+		// the SAME clock as camera images' alivetime, so a pose can be matched to the frame it was
+		// seen from.
 		long timestamp;
 	};
 
