@@ -1,0 +1,28 @@
+module RoboCompDroneControl
+{
+	// Robot frame: +x right, +y forward, +z up. Metres and radians; yaw is CCW about +z,
+	// measured from the drone's own nose.
+	struct TPose
+	{
+		float x;
+		float y;
+		float z;
+		float yaw;
+		// Wall-clock ms since the epoch at which the server wrote this pose -- the SAME clock as
+		// the camera images' alivetime, so a pose can be matched to the frame it was seen from.
+		long timestamp;
+	};
+
+	interface DroneControl
+	{
+		// Drone BODY frame: forward = the drone's nose, lateral = its right, climb = up,
+		// yaw = CCW about +z. m/s and rad/s; the server clamps each axis to its own limits.
+		// The command EXPIRES: after 0.5 s without another one the drone brakes to a hover,
+		// so callers resend every cycle. A gamepad in drone mode overrides it.
+		void setVelocity(float forward, float lateral, float climb, float yaw);
+		// Target zero now. It brakes to a hover under the server's acceleration limits.
+		void stop();
+		// The pose the server last wrote, robot frame.
+		TPose getPose();
+	};
+};
